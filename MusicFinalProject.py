@@ -4,6 +4,7 @@ import spotipy.util as util
 import configparser
 import math
 
+#CONSTANTS
 NUM_FEATURES = 11
 NUM_SONGS = 79
 THRESHOLD = 0.9966892120292986 #taken from a song I decided was really good in the "missed hits"
@@ -136,6 +137,9 @@ for i in range(num_daily_tracks):
 
 test_uris = missed_hits_uris + daily_mix_uris
 
+#------------------------------------------------------------------------------#
+
+#CALL HELPER FUNCTIONS ON RETRIEVED DATA
 test_songs_dict = getAudioFeatures(test_uris)
 top_songs_dict = getAudioFeatures(top_songs_uris[:79])
 
