@@ -67,13 +67,32 @@ def getAudioFeatures(uri_list):
 
 #print the most similar songs given a dictionary of test songs and a dictionary of good songs
 def printMostSimilar(top_songs_dict, test_songs_dict):
+    most_similar = []
     print("MOST SIMILAR SONGS AND THEIR SIMILARITY SCORES")
     test_iter = iter(test_songs_dict)
     for i in range(NUM_SONGS):
         test_uri = next(test_iter)
         avg = getAvgSimilarity(test_uri, test_songs_dict[test_uri], top_songs_dict)
         if (avg >= THRESHOLD):
+            most_similar.append(test_uri)
             print(sp.track(test_uri)["name"] + ": " + str(avg))
+    return most_similar
+
+def analyze(uris):
+    genre_dict = {}
+    for uri in uris:
+        track = sp.track(uri)
+        artist = sp.artist(track["artists"][0]["uri"])
+        genres = artist["genres"]
+        for genre in genres:
+            if (genre in genre_dict):
+                genre_dict[genre] += 1
+            else:
+                genre_dict[genre] = 1
+    genre_dict = sorted(genre_dict.items(), key = lambda x : x[1], reverse = True)
+    print("-----------------------------------------------")
+    popular = [pair[0] for pair in genre_dict][:4]
+    print("THE MOST POPULAR GENRES WERE: " + str(popular))
 #------------------------------------------------------------------------------#
 
 #RETRIEVING NECESSARY PLAYLISTS
@@ -105,7 +124,6 @@ top_songs_uris = []
 for i in range(num_top_tracks):
     top_songs_uris.append(top_songs_tracks[i]["track"]["uri"])
 
-
 num_missed_hits = len(missed_hits_tracks)
 missed_hits_uris = []
 for i in range(num_missed_hits):
@@ -121,4 +139,8 @@ test_uris = missed_hits_uris + daily_mix_uris
 test_songs_dict = getAudioFeatures(test_uris)
 top_songs_dict = getAudioFeatures(top_songs_uris[:79])
 
-printMostSimilar(top_songs_dict, test_songs_dict)
+# test_track = sp.track(next(iter(test_songs_dict)))
+# artist = sp.artist(test_track["artists"][0]["uri"])
+# print(artist["genres"])
+most_similar_uris = printMostSimilar(top_songs_dict, test_songs_dict)
+analyze(most_similar_uris)
