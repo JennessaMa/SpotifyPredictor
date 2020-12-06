@@ -64,6 +64,16 @@ def getAudioFeatures(uri_list):
             continue
         dict[uri] = list(features.values())[:11] #only need necessary parameters
     return dict
+
+#print the most similar songs given a dictionary of test songs and a dictionary of good songs
+def printMostSimilar(top_songs_dict, test_songs_dict):
+    print("MOST SIMILAR SONGS AND THEIR SIMILARITY SCORES")
+    test_iter = iter(test_songs_dict)
+    for i in range(NUM_SONGS):
+        test_uri = next(test_iter)
+        avg = getAvgSimilarity(test_uri, test_songs_dict[test_uri], top_songs_dict)
+        if (avg >= THRESHOLD):
+            print(sp.track(test_uri)["name"] + ": " + str(avg))
 #------------------------------------------------------------------------------#
 
 #RETRIEVING NECESSARY PLAYLISTS
@@ -86,7 +96,7 @@ top_songs_tracks = top_songs["tracks"]["items"]
 missed_hits_tracks = missed_hits["tracks"]["items"]
 daily_mix_tracks = daily_mix1["tracks"]["items"]
 
-#get the song namne and its uri to extract data from
+#get the song name and its uri to extract data from
 # print(current_tracks[0]["track"]["uri"])
 # print(current_tracks[0]["track"]["name"])
 
@@ -111,10 +121,4 @@ test_uris = missed_hits_uris + daily_mix_uris
 test_songs_dict = getAudioFeatures(test_uris)
 top_songs_dict = getAudioFeatures(top_songs_uris[:79])
 
-test_iter = iter(test_songs_dict)
-top_iter = iter(top_songs_dict)
-
-for i in range(NUM_SONGS - 69):
-    test_uri = next(test_iter)
-    print("average similarity of " + sp.track(test_uri)["name"])
-    print(getAvgSimilarity(test_uri, test_songs_dict[test_uri], top_songs_dict))
+printMostSimilar(top_songs_dict, test_songs_dict)
