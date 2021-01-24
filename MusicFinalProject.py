@@ -10,8 +10,8 @@ NUM_SONGS = 79
 THRESHOLD = 0.9966892120292986 #taken from a song I decided was really good in the "missed hits"
 
 #AUTHENTICATION PROCESS
-cid = "6cf836da1edc44bf9d696846615b1083"
-secret = "71176dc8eef847d08b3efa4ddaea6566"
+cid = #[REDACTED]
+secret = #[REDACTED]
 username = "jennessa.ma"
 redirect_uri = "https://www.google.ca/"
 scope = 'user-library-read playlist-read-private'
